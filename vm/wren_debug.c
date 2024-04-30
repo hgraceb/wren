@@ -42,24 +42,35 @@ void wrenDebugPrintStackTrace(WrenVM* vm)
   }
 }
 
+static void dumpString(ObjString *obj) {
+  for (int i = 0; i < obj->length; i++) {
+    char value = obj->value[i];
+    if (value != '\n') {
+      printf("%c", value);
+    } else {
+      printf("\\n");
+    }
+  }
+}
+
 static void dumpObject(Obj* obj)
 {
   switch (obj->type)
   {
     case OBJ_CLASS:
-      printf("[class %s %p]", ((ObjClass*)obj)->name->value, obj);
+      printf("[class %s %x]", ((ObjClass*)obj)->name->value, obj);
       break;
-    case OBJ_CLOSURE: printf("[closure %p]", obj); break;
-    case OBJ_FIBER: printf("[fiber %p]", obj); break;
-    case OBJ_FN: printf("[fn %p]", obj); break;
-    case OBJ_FOREIGN: printf("[foreign %p]", obj); break;
-    case OBJ_INSTANCE: printf("[instance %p]", obj); break;
-    case OBJ_LIST: printf("[list %p]", obj); break;
-    case OBJ_MAP: printf("[map %p]", obj); break;
-    case OBJ_MODULE: printf("[module %p]", obj); break;
-    case OBJ_RANGE: printf("[range %p]", obj); break;
-    case OBJ_STRING: printf("%s", ((ObjString*)obj)->value); break;
-    case OBJ_UPVALUE: printf("[upvalue %p]", obj); break;
+    case OBJ_CLOSURE: printf("[closure %x]", obj); break;
+    case OBJ_FIBER: printf("[fiber %x]", obj); break;
+    case OBJ_FN: printf("[fn %x]", obj); break;
+    case OBJ_FOREIGN: printf("[foreign %x]", obj); break;
+    case OBJ_INSTANCE: printf("[instance %x]", obj); break;
+    case OBJ_LIST: printf("[list %x]", obj); break;
+    case OBJ_MAP: printf("[map %x]", obj); break;
+    case OBJ_MODULE: printf("[module %x]", obj); break;
+    case OBJ_RANGE: printf("[range %x]", obj); break;
+    case OBJ_STRING: dumpString((ObjString*)obj); break;
+    case OBJ_UPVALUE: printf("[upvalue %x]", obj); break;
     default: printf("[unknown object %d]", obj->type); break;
   }
 }
@@ -378,7 +389,7 @@ void wrenDumpCode(WrenVM* vm, ObjFn* fn)
 
 void wrenDumpStack(ObjFiber* fiber)
 {
-  printf("(fiber %p) ", fiber);
+  printf("(fiber %x) ", fiber);
   for (Value* slot = fiber->stack; slot < fiber->stackTop; slot++)
   {
     wrenDumpValue(*slot);

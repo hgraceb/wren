@@ -443,8 +443,7 @@ class System {
   }
 
   static print(obj) {
-    writeObject_(obj)
-    writeString_("\n")
+    writeString_("%(obj)\n")
     return obj
   }
 
