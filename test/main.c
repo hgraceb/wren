@@ -1,5 +1,4 @@
 #include "./test.h"
-#include "./api/api_tests.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -21,11 +20,6 @@ static WrenVM* initVM(bool isAPITest)
   config.writeFn = vm_write;
   config.errorFn = reportError;
 
-  if(isAPITest) {
-    config.bindForeignClassFn = APITest_bindForeignClass;
-    config.bindForeignMethodFn = APITest_bindForeignMethod;
-  }
-
   // Since we're running in a standalone process, be generous with memory.
   config.initialHeapSize = 1024 * 1024 * 100;
   return wrenNewVM(&config);
@@ -42,10 +36,6 @@ int main(int argc, const char* argv[]) {
 
   vm = initVM(isAPITest);
   WrenInterpretResult result = runFile(vm, testName);
-
-  if(isAPITest) {
-    exitCode = APITest_Run(vm, testName);
-  }
 
   if (result == WREN_RESULT_COMPILE_ERROR) return WREN_EX_DATAERR;
   if (result == WREN_RESULT_RUNTIME_ERROR) return WREN_EX_SOFTWARE;
