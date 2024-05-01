@@ -44,9 +44,9 @@ void wrenDebugPrintStackTrace(WrenVM* vm)
 
 static void dumpString(ObjString *obj) {
   for (int i = 0; i < obj->length; i++) {
-    char value = obj->value[i];
-    if (value != '\n') {
-      printf("%c", value);
+    char c = obj->value[i];
+    if (c != '\n') {
+      printf("%c", c);
     } else {
       printf("\\n");
     }
